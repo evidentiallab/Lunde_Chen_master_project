@@ -1,0 +1,99 @@
+Introduction Section
+
+The core content of this section:
+Explain what the problem is, what we have done and what our results is. 
+State our contributions.
+
+1. Introduce the challenges of big data processing. (Volumn Variety Value)
+
+The rapid development of the Internet has generated vast amounts of data which poses great challenges to traditional data processing model.
+
+
+2. Introduce the various cluster computing frameworks suitable for big data processing
+
+To deal with such challenges, a variety of cluster computing frameworks have been proposed to support large-scale data-intensive applications on commodity machines. MapReduce, introduced by Google\cite{jdean2004} is one such framework for processing large data sets in a scalable, reliable and fault-tolerant manner. 
+%Dryad\cite{michael2007} takes one step forward and provides support for expressing data processing flows as directed acyclic graphs. Haloop and Twister extend MapReduce to support iterative operations. As for Twister and HaLoop, Spark provides more general model with more 
+transformations.
+
+Import review on Spark.
+%https://groups.google.com/forum/#!msg/brown-csci2950-u-f11/5Mxnajv8kFk/gdVvNsvXhVAJ
+
+
+3. Explain Hadoop's weakness in iterative operations and Spark's strength in iterative operations. Point out Spark's huge performance advantage. 
+Apache Hadoop\cite{url_hadoop} provides an open source implementation of MapReduce.
+However, Hadoop is not good for iterative operations which are very common in many applications. MapReduce cannot keep reused data and state information during execution. Thus, MapReduce reads the same data iteratively and materializes intermediate results in local disks in each iteration, requiring lots of disk accesses, I/Os and unnecessary computations. Spark \cite{url_spark} is a MapReduce-like cluster computing framework \cite{matei2010}, which is designed to overcome Hadoop's shortages in iterative operations. Spark introduces a data structure called resilient distributed datasets(RDDs)\cite{matei2012}, through which reused data and intermediate results can be cached in memory across machines of cluster in the whole iterative process. This feature is best suited for low-latency iterative jobs. Although Spark can bring tremendous speedup, we suspect its memory cost behind this huge performance boost.
+
+
+
+4. Propose to compare the the system performance for iterative algorithms between Hadoop and Spark by picking up a classic algorithm. Explain why we choos these platforms rather than the others
+In this paper we evaluate the system performance for iterative algorithms between Hadoop and Spark by choosing a typical iterative algorithm PageRank. We implemented the PageRank algorithm according to the programming models provided by Hadoop and Spark respectively and applied the algorithm to different sizes of graph datasets to compare their running time and memory usage. 
+
+5. Give our experimental observations.
+Experimental results show that 1) Spark can outperform Hadoop by 10x-15x in Spark's comfort zone which means there is enough memory for the whole iterative process; 2) However, Spark is memory consuming. Although input datasets are not that large compared to the whole memory of the cluster, intermediate results generated at each iteration can easily fill the whole memory of the cluster; 3) Performance advantage of Spark is weakened to be almost the same as and even worse than Hadoop by insufficient memory.
+
+6. Point out our contributions.
+	To our best knowledgement, our work is first to compare their memory cost.
+
+
+System overview
+The core content of this section:
+Compare the fundamental differences between Hadoop and Spark.
+
+1. Introduce Hadoop briefly since it is well-known.
+
+Apache Hadoop\cite{url_hadoop} provides an open source Java implementation of MapReduce. Hadoop is composed of two layers: a data storage layer called Hadoop distributed file system (HDFS) and a data processing layer called Hadoop MapReduce Framework. HDFS is a block-structured file system managed by a single master node. A processing job in Hadoop is broken down to as many Map tasks as input data blocks and one or more Reduce tasks. It is a general purpose framework suitable for many different types of applications, such as log analysis, web crawler, index building, and machine learning. However, Hadoop shows poor performance in iterative operations. An iterative operation can be expressed as multiple Hadoop MapReduce jobs. Different MapReduce jobs cannot keep and share data. So in iterative operations, frequent used data has to be read from and written to HDFS multiple times which incurs lots of disk accesses, I/Os and unnecessary computations\cite{jaliya2010} \cite{yingyi2010} \cite{yanfeng2011} at each iteration.
+
+%Each iteration in an iterative operation can be expressed as one or more Hadoop MapReduce jobs.(A MapReduce job includes two stages: Map and Reduce. Before Map stage data will be read from HDFS. After Reduce stage data will be written to HDFS.)
+
+2. Focus on explaining why Spark designed the RDD data structure. The analysis of Spark should be longer than Hadoop for Hadoop is well-known.
+
+Spark is a new cluster computing framework which is more general and efficient than Hadoop. Spark does not have its own distributed file system. Instead, it uses Hadoop supported storage systems(e.g, HDFS, HBase) as its input source and output destination. In order to overcome Hadoop's shortages in iterative operations, Spark introduced a data structure called resilient distributed datasets(RDDs). The runtime of Spark consists of a driver and multiple workers. Before an iterative operation, the user's driver program will launch multiple workers. These workers will read data blocks from a distributed file system and cache them in their own memory as partitions of RDD. These partitions form a whole RDD from the view of the driver program. The RDD feature of Spark avoids data reloading from disk at each iteration which dramatically speeds up the iterative operation. Users can explicitly persist reused data and intermediate results in memory in the form of RDDs, control their partitioning to optimize data placement, and manipulate them using a rich set of operators. Since RDDs are partitioned across the memory of machines in the cluster, they can be processed in parallel. RDDs are fault-tolerant which means they can be rebuilt if a partition of them is lost. RDDs are read-only, so changes to current RDDs will cause creation of new RDDs. 
+
+% RDDs are collection of objects cached across memory of machines in the cluster.  Reused data and intermediate results can be specified to be cached in memory in the form of RDDs for later use.
+
+3. Compare their fundamental differeces in the following aspects:
+   implementation language, programming language, storage, parallelism, fine-grained fault-tolerance, expressivity, high-level language support, I/O,
+   
+   We compare Hadoop and Spark in the following aspects.
+   \begin{itemize}
+   \item Implementation language: Hadoop-Java, Spark-Scala.
+   
+   \item Programming language: Hadoop-Java, Spark-Scala. Scala integrates features of object-oriented and functional languages which makes applications implementation in Spark more concise and elegant. Algorithms implemented by Spark is always shorter than those implemented by Hadoop.
+   
+   \item Independence of storage: Both platforms are independent from underlying storage layers.(Spark can read data from any Hadoop input source, e.g., HDFS, HBase, using Hadoop's existing input plugin APIs)   
+   
+   \item Parallelism: In Hadoop, a job can be divided into multiple small Map and Reduce tasks running in machines of a cluster which provide high parallelism. In Spark, a job can launch multiple workers in machines of a cluster which can also provide high parallelism. 
+   
+   \item Fine-grained fault-tolerance: both platforms can re-run failed or slow tasks on other nodes
+   
+   \item Expressivity: MapReduce in Hadoop can express many statistical and learning algorithms. While RDDs in Spark are more expressive. The operators provided by RDDs can not only express MapReduce models, they can also express models like DryadLINQ, SQL and Pregel.
+   
+   \item High Level language(Delarative Query Language) support: Hadoop has Pig Latin and HiveQL, while Spark has Shark.
+   \end{itemize}
+
+
+
+4. Introduce the following experiment section by suspecting Spark's memory cost.
+
+
+Experimental Environment
+Introduce the experimental cluster: the configuration of each host, the versions of Mesos, Hadoop and Spark and the reason why we choose them.
+
+Implementation
+
+1. Introduce PageRank Algorithm briefly
+2. Point out the parameters which may affect the performance of PageRank.
+3. For the parameters mentioned above, list the graph datasets we used.
+   Focus on explaining the relationship between the features of the graph datasets and the parameters and which performance indicators can these datasets test.
+4. Introduce PageRank implementation on Hadoop and Spark.
+   Point out whether our implementation is different from other implementatioins.
+
+Results
+1. Scalability
+2. Running time comparison
+3. Memory comparison
+
+Conclustions
+
+
+

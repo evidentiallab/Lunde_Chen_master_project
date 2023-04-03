@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp"
+    android:background="#FFFFFF"
+	>
+    <TextView 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="right"
+    android:text= "FUCK_OFF_YOU_2013.txt"
+    android:textSize = "17sp"
+    android:id="@+id/textV_file_name"
+    android:textColor="#000000"
+        />
+    <TextView 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:gravity="left"
+    android:paddingRight="10dp"
+    android:text= "1000 Kb"
+    android:textSize = "14sp"
+    android:id="@+id/textV_file_size"
+    android:textColor="#666633"
+        />
+
+</RelativeLayout>

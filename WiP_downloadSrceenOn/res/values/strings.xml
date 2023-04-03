@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">WiP_DownloadSrceenOn</string>
+    <string name="hello_world">Hello, world!</string>
+    <string name="background_color">Background Color</string>
+    <string name="file_size">File Size</string>
+    <string name="NAN">NAN</string>
+
+</resources>

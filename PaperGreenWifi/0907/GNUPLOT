@@ -1,0 +1,45 @@
+###########Histograms###########
+binwidth=1
+bin(x,width)=width*floor(x/width)
+plot "Primitive_VERY_STRONG" using (bin($1,binwidth)):(1.0) smooth freq with boxes
+// 或者 plot "Green_TimeCountOneSession" using (bin($1,binwidth)):(1.0) smooth freq with boxes
+
+//保存
+set terminal postscript eps enhanced colour dashed lw 1 "Helvetica" 14 
+set output "1.eps" 
+replot
+
+###########Throughput###########
+#之前是 set terminal postscript eps enhanced colour dashed lw 1 "Helvetica" 14
+set terminal postscript eps size 3.5,2.62 enhanced color  font 'Helvetica,10' linewidth 1
+set xlabel "Time(s)"
+set ylabel "Throughput(Kb/s)"
+set style line 2 lt 1 lw 3 lc rgb "red"
+plot "b2a_tput_gnu_hong" using ($1 / 1000):2 with lines title "Real-time throughput" linecolor rgb "blue", "b2a_tput_gnu_lan" using ($1 / 1000):2 with lines title "Averaged throughput" ls 2
+
+#之前是 set terminal postscript eps enhanced colour dashed lw 1 "Helvetica" 14 
+set terminal postscript eps size 3.5,2.62 enhanced color  font 'Helvetica,10' linewidth 1
+set xlabel "Time(s)"
+set ylabel "Throughput(Kb/s)"
+set style line 2 lt 1 lw 3 lc rgb "red"
+plot "a2b_tput_gnu_hong" using ($1 / 1000):2 with lines title "Real-time throughput" linecolor rgb "blue", "a2b_tput_gnu_lan" using ($1 / 1000):2 with lines title "Averaged throughput" ls 2
+
+
+###########   Energy ##############
+# 之前是这个： set terminal postscript eps size 3.5,2.62 enhanced color  font 'Helvetica,20' linewidth 2
+
+set terminal postscript eps size 3.5,2.62 enhanced color  font 'Helvetica,10' linewidth 1
+set output "output.eps"
+set xlabel "Time(s)"
+set ylabel "Power consumption(mA)"
+set style line 1 lt 1 lw 1 lc rgb "red"
+set style line 2 lt 1 lw 1 lc rgb "blue"
+plot "1" using ($0 / 100):1 with lines title "Strong Rssi" ls 1, "2" using ($0 / 100):1 with lines  title "Weak Rssi" ls 2 
+
+
+
+
+
+
+
+

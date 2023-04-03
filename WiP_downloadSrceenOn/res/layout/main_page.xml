@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/layout_linear" >
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+         >
+    <Spinner 
+        android:id="@+id/spinner_color"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/background_color"
+        android:layout_weight="1"
+        />
+    <Spinner 
+        android:id="@+id/spinner_brightness"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/background_color"
+        android:layout_weight="1"
+        />
+    </LinearLayout>
+    
+    <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+         >
+    <Spinner 
+        android:id="@+id/spinner_size"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/file_size"
+        android:layout_weight="1"
+        />
+    <Spinner 
+        android:id="@+id/spinner_NAN"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/NAN"
+        android:layout_weight="1"
+        android:visibility="gone"
+        />
+    </LinearLayout>
+    
+    <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+    
+    <TextView 
+     android:id="@+id/textV"
+     android:text="http://www.baidu.com/img/bdlogo.png"
+     android:padding="2dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:lines="2"
+        />
+    
+    <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+    
+    <LinearLayout
+	android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#000000"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:id="@+id/layout_linear2"
+         >
+    <Button
+     android:id="@+id/bttn_pre"
+     android:text="Previous"
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+        />
+    
+    <FrameLayout
+      android:layout_width="4dp"
+      android:layout_height="0dp"
+      />
+    
+     <Button
+     android:id="@+id/bttn_next"
+     android:text="Next"
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+        />   
+    </LinearLayout>
+    
+    <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+    
+     <Button
+     android:id="@+id/bttn_start"
+     android:text="START_DOWNLOADMANAGER"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+     <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+     
+      <Button
+     android:id="@+id/bttn_start_2"
+     android:text="START_ASYNC"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+       <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+     
+      <Button
+     android:id="@+id/bttn_start_3"
+     android:text="REGISTER_ASYNC_SCREENOFF"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+      
+     <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+     <Button
+     android:id="@+id/bttn_stop"
+     android:background="#000000"
+     android:text="STOP"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+
+</LinearLayout>

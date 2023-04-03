@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.myandroidwifi"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="14" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.myandroidwifi.page.MainPage"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.myandroidwifi.page.CheckServerPage"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.example.myandroidwifi.page.ScreenPlusWifiPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_get_packets_page" >
+        </activity>
+
+        <activity
+            android:name="com.example.myandroidwifi.page.ScreenOnlyPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_equivalent_page" >
+        </activity>
+        <activity
+            android:name="com.example.myandroidwifi.page.ScanWifiPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_scan_wifi_page" >
+        </activity>
+        <activity
+            android:name="com.example.myandroidwifi.page.ChoosePage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_choose_packets_size_page" >
+        </activity>
+
+        <service android:name="com.example.myandroidwifi.service.ChoosePageService" >
+            <intent-filter>
+                <action android:name="com.example.myandroidwifi.service.ChoosePageService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        <service android:name="com.example.myandroidwifi.service.MyAppSpeedService" >
+            <intent-filter>
+                <action android:name="com.example.myandroidwifi.service.MyAppSpeedService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <!--
+        <receiver android:name="com.example.myandroidwifi.service.BatteryChangeReceiver"> 
+    		<intent-filter android:priority="900">
+      		 	<action android:name="android.intent.action.BATTERY_LOW" />
+       			<action android:name="android.intent.action.BATTERY_OKAY" />
+       			<action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+       			<action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+    		</intent-filter>
+		</receiver>
+        -->
+
+        <activity
+            android:name="com.example.myandroidwifi.page.RssiPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_rssi_modelling_page" >
+        </activity>
+        <activity
+            android:name="com.example.myandroidwifi.page.DebugPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_debug_page" >
+        </activity>
+        <activity
+            android:name="com.example.myandroidwifi.page.RealTimeStatsPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_real_time_stats_page" >
+        </activity>
+        <activity
+            android:name="com.example.myandroidwifi.page.CheckBatteryWifiPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_check_battery_wifi" >
+        </activity>
+        <activity
+            android:name="com.example.myandroidwifi.page.TcpdumpPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_tcpdump_page" >
+        </activity>
+        
+        <activity
+            android:name="com.example.myandroidwifi.page.ConnectivityPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_connectivity_page" >
+        </activity>
+        
+        
+        <receiver android:name="com.example.myandroidwifi.receiver.BootBroadcast"
+			android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+		<receiver android:name="com.example.myandroidwifi.receiver.PackageBroadcast">
+			<intent-filter>
+				<action android:name="android.intent.action.PACKAGE_REMOVED" />
+				<data android:scheme="package" />
+			</intent-filter>
+		</receiver>       
+        
+    </application>
+    
+</manifest>

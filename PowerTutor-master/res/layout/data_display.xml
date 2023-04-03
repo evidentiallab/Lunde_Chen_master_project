@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+    
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="0.1"
+    android:orientation="horizontal" >  
+    <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent" 
+      android:orientation="vertical"  
+      android:layout_weight="1"
+        >
+        <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent" 
+      android:orientation="vertical"  
+      android:layout_weight="1"
+        >
+        <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/textV_001"
+       android:text="Current \nPower"
+       android:lines="2"
+       android:textColor="#336633"
+       android:background="#DDDDDD"
+       android:textSize="16sp"
+         />  
+       <ScrollView
+          android:id="@+id/scrollV_1"
+         android:layout_width="fill_parent"
+         android:fadingEdge="none"
+       android:layout_height="wrap_content"
+           >
+     <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="fill_parent"
+       android:id="@+id/textV_1"
+       android:textColor="#000000"
+       android:background="#DDDDDD"
+         />   
+         </ScrollView>
+         </LinearLayout>
+         <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent" 
+      android:orientation="vertical"  
+      android:layout_weight="1"
+        >
+     <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/textV_002"
+       android:text="Average \nPower"
+       android:lines="2"
+       android:textColor="#336633"
+       android:background="#99CC99"
+       android:textSize="16sp"
+         />   
+        <ScrollView
+          android:id="@+id/scrollV_2"
+         android:layout_width="fill_parent"
+         android:fadingEdge="none"
+       android:layout_height="wrap_content"
+           >    
+         <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:id="@+id/textV_2"
+       android:textColor="#000000"
+       android:background="#99CC99"
+         />   
+         </ScrollView>
+        </LinearLayout>
+        
+        
+        
+    </LinearLayout>
+    <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent" 
+      android:orientation="vertical"  
+      android:layout_weight="1"
+        >
+         <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent" 
+      android:orientation="vertical"  
+      android:layout_weight="1"
+        >
+        <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/textV_003"
+       android:text="CPU \nTotal"
+       android:lines="2"
+       android:textColor="#336633"
+       android:background="#CC6699"
+              android:textSize="16sp"
+       
+         />   
+      <ScrollView
+          android:id="@+id/scrollV_3"
+         android:layout_width="fill_parent"
+         android:fadingEdge="none"
+       android:layout_height="wrap_content"
+           >
+        
+     <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:id="@+id/textV_3"
+       android:textColor="#000000"
+       android:background="#CC6699"
+       
+         />   
+         </ScrollView>   
+         </LinearLayout>
+         <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent" 
+      android:orientation="vertical"  
+      android:layout_weight="1"
+        >
+         
+         <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/textV_004"
+       android:text="CPU \nPartiHealth"
+       android:lines="2"
+       android:textColor="#336633"
+       android:background="#99CCFF"
+              android:textSize="16sp"
+       
+         />       
+         <ScrollView
+          android:id="@+id/scrollV_4"
+         android:layout_width="fill_parent"
+         android:fadingEdge="none"
+       android:layout_height="wrap_content"
+           >
+         <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:id="@+id/textV_4"
+       android:textColor="#000000"
+       android:background="#99CCFF"
+         />   
+         </ScrollView>
+        </LinearLayout>
+ 
+    </LinearLayout>
+    
+    
+    
+      <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent" 
+      android:orientation="vertical"  
+      android:layout_weight="1"
+        >
+         <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent" 
+      android:orientation="vertical"  
+      android:layout_weight="1"
+        >
+        <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/textV_005"
+       android:text="Power \nPartiHealth"
+       android:lines="2"
+       android:textColor="#336633"
+       android:background="#FFFFCC"
+              android:textSize="16sp"
+       
+         />   
+         <ScrollView
+          android:id="@+id/scrollV_5"
+         android:layout_width="fill_parent"
+         android:fadingEdge="none"
+       android:layout_height="wrap_content"
+           >        
+     <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:id="@+id/textV_5"
+       android:textColor="#000000"
+       android:background="#FFFFCC"
+         />   
+         </ScrollView>
+         </LinearLayout>
+         <LinearLayout 
+     android:layout_width="match_parent"
+     android:layout_height="fill_parent" 
+      android:orientation="vertical"  
+      android:layout_weight="1"
+        >
+         
+         <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/textV_006"
+       android:text="Average\nPartiHealth"
+       android:lines="2"
+       android:textColor="#336633"
+       android:background="#FFCCFF"
+       android:textSize="16sp"
+         />       
+		<ScrollView
+          android:id="@+id/scrollV_6"
+         android:layout_width="fill_parent"
+         android:fadingEdge="none"
+       android:layout_height="wrap_content"
+           >  
+         <TextView 
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:id="@+id/textV_6"
+       android:textColor="#000000"
+       android:background="#FFCCFF"
+         />   
+         </ScrollView>
+        </LinearLayout>
+ 
+    </LinearLayout>
+    </LinearLayout>
+    
+     <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="0.55"
+    android:orientation="horizontal" >  
+    
+    <Button 
+     android:layout_height="wrap_content" 
+     android:layout_width="match_parent" 
+     android:id="@+id/buttonV_1"
+     android:text="BUTTON1"
+     android:layout_weight="1"
+        />
+    <Button 
+     android:layout_height="wrap_content" 
+     android:layout_width="match_parent" 
+     android:id="@+id/buttonV_2"
+     android:text="BUTTON2"
+     android:layout_weight="1"
+        />
+    </LinearLayout>
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="0.55"
+    android:orientation="horizontal" >  
+    <Button 
+     android:layout_height="wrap_content" 
+     android:layout_width="match_parent" 
+     android:id="@+id/buttonV_3"
+     android:text="BUTTON3"
+     android:layout_weight="1"
+        />
+    <Button 
+     android:layout_height="wrap_content" 
+     android:layout_width="match_parent" 
+     android:id="@+id/buttonV_5"
+     android:text="BUTTON5"
+     android:layout_weight="1"
+        />
+     <Button 
+     android:layout_height="wrap_content" 
+     android:layout_width="match_parent" 
+     android:id="@+id/buttonV_4"
+     android:text="BUTTON4"
+     android:layout_weight="1"
+        />
+    </LinearLayout>
+    
+    
+
+</LinearLayout>

@@ -1,0 +1,205 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#000000"
+    tools:context=".CheckServerPage" >
+
+     <LinearLayout
+        android:id="@+id/linearL_1_checkserverpage"
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="vertical"
+     	android:gravity = "center"
+     	android:layout_marginTop="5dp"
+         >
+
+    <EditText 
+        android:id="@+id/editV_1_checkserverpage"
+        android:layout_width = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:lines="1"
+        android:textSize="15sp"
+        android:textColor="#CCFF66"
+        android:background="#555555"
+        android:padding="4dp"
+        android:gravity="center"
+        android:text="Server Address: 192.168.1.100"
+        />     
+      
+    <TextView
+        android:id="@+id/textV_1_checkserverpage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_marginTop="12dp"
+        android:lines="2"
+        android:background="#CCCCCC"
+        android:minWidth="100dp"
+        android:padding="10dp"
+         />
+    </LinearLayout>
+    
+     <LinearLayout
+        android:id="@+id/linearL_2_checkserverpage"
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="vertical"
+     	android:gravity = "center"
+     	android:layout_marginTop="25dp"
+     	android:layout_below="@id/linearL_1_checkserverpage"
+         >
+     <LinearLayout
+        android:id="@+id/linearL_2_1_checkserverpage"
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	
+     	android:gravity = "center"
+     	android:layout_marginTop="5dp"
+         >
+    <TextView
+        android:id="@+id/textV_baidu_1_checkserverpage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:background="#444444"
+        android:text="www.baidu.com"
+        android:padding="8dp"
+        android:layout_weight="1"
+         />
+    <TextView
+        android:id="@+id/textV_baidu_2_checkserverpage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:background="#444444"
+        android:padding="8dp"
+        android:text="Connecting..."
+        android:gravity="right"
+        android:layout_weight="1"
+         />
+    </LinearLayout>
+    
+     <LinearLayout
+        android:id="@+id/linearL_2_2_checkserverpage"
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+     	android:layout_marginTop="5dp"
+         >
+    <TextView
+        android:id="@+id/textV_sohu_1_checkserverpage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:background="#444444"
+        android:text="www.sohu.com"
+        android:padding="8dp"
+        android:layout_weight="1"
+         />
+    <TextView
+        android:id="@+id/textV_sohu_2_checkserverpage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:background="#444444"
+        android:padding="8dp"
+        android:text="Connecting..."
+        android:gravity="right"
+        android:layout_weight="1"
+         />
+    </LinearLayout>
+    
+     <LinearLayout
+        android:id="@+id/linearL_2_3_checkserverpage"
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+     	android:layout_marginTop="5dp"
+         >
+    <TextView
+        android:id="@+id/textV_sina_1_checkserverpage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:background="#444444"
+        android:text="www.sina.com.cn"
+        android:padding="8dp"
+        android:layout_weight="1"
+         />
+    <TextView
+        android:id="@+id/textV_sina_2_checkserverpage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:background="#444444"
+        android:padding="8dp"
+        android:text="Connecting..."
+        android:gravity="right"
+        android:layout_weight="1"
+         />
+    </LinearLayout>
+     
+     <LinearLayout
+        android:id="@+id/linearL_2_4_checkserverpage"
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+     	android:layout_marginTop="5dp"
+         >
+    <TextView
+        android:id="@+id/textV_yahoo_1_checkserverpage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:background="#444444"
+        android:text="www.yahoo.com"
+        android:padding="8dp"
+        android:layout_weight="1"
+         />
+    
+    <TextView
+        android:id="@+id/textV_yahoo_2_checkserverpage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:background="#444444"
+        android:padding="8dp"
+        android:text="Connecting..."
+        android:gravity="right"
+        android:layout_weight="1"
+         />
+    </LinearLayout>
+   </LinearLayout>
+   
+            
+    <Button 
+        android:id="@+id/button_1_checkserverpage"
+        android:layout_height = "wrap_content"
+        android:layout_width = "wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="I'M FEELING LUCKY!"
+        android:textColor="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
+     
+</RelativeLayout>

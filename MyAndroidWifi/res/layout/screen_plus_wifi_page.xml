@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+     android:background="#000000"
+    tools:context=".ScreenPlusWifiPage" >
+
+       <TextView
+        android:id="@+id/textV_screenpluswifi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:lines="5"
+        android:layout_centerHorizontal="true"
+        android:textSize="15sp"
+        android:layout_marginTop="30dp"
+        android:background="#CCCCCC"
+        android:minWidth="100dp"
+        android:padding="10dp"
+         />
+    
+    <EditText 
+        android:id="@+id/editV_screenpluswifi"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:minWidth="100dp"
+        android:lines="1"
+        android:textSize="22sp"
+        android:textColor="#336633"
+        android:background="#CCCCCC"
+        android:padding="10dp"
+        />
+    
+    <Button 
+        android:id="@+id/button_screenpluswifi"
+        android:layout_centerHorizontal="true"
+        android:layout_height = "wrap_content"
+        android:layout_width = "wrap_content"
+        android:layout_alignParentBottom = "true"
+        android:text="START QUERY"
+        />
+
+</RelativeLayout>

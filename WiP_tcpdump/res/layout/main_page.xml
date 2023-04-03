@@ -1,0 +1,262 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".MainPage" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+     	android:layout_marginTop="10dp"
+     	android:id="@+id/relativL_1_tcpdumppage"
+         >
+     <TextView
+        android:id="@+id/textV_1_1_tcpdumppage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#BBBBBB"
+        android:textSize="14sp"
+        android:minWidth="100dp"
+        android:text="Choose / Input Log App Name :    "
+        android:layout_alignParentLeft="true"
+         />
+    <EditText 
+        android:id="@+id/editV_1_tcpdumppage"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:minWidth="100dp"
+        android:lines="1"
+        android:textSize="14sp"
+        android:textColor="#CCFF66"
+        android:background="#555555"
+        android:padding="2dp"
+        android:text="Browser"
+        android:layout_alignParentRight="true"
+        />
+     <TextView
+        android:id="@+id/textV_1_2_tcpdumppage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#BBBBBB"
+        android:textSize="14sp"
+        android:minWidth="100dp"
+        android:layout_marginTop="15dp"
+        android:text="Tcpdump log file : \n    "
+        android:layout_below="@id/textV_1_1_tcpdumppage"
+         />    
+      </RelativeLayout>
+      
+    <LinearLayout
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+     	android:layout_marginTop="10dp"
+     	android:id="@+id/LinearL_2_tcpdumppage"
+     	android:layout_below="@id/relativL_1_tcpdumppage"
+         >        
+     
+     
+     <Button
+     android:id="@+id/bttn_moins_2_tcpdumppage"
+     android:text="Value -"
+     android:textSize="15sp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+     />
+     
+     <Button
+     android:id="@+id/bttn_clear_2_tcpdumppage"
+     android:text="Clear"
+     android:textSize="15sp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+        />
+     
+     <Button
+     android:id="@+id/bttn_plus_2_tcpdumppage"
+     android:text="Value +"
+     android:textSize="15sp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+     />
+	 </LinearLayout>
+	 
+     <TextView
+       android:id="@+id/textV_3_tcpdumppage"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:gravity="center"
+       android:textColor="#BBBBBB"
+       android:textSize="14sp"
+       android:minWidth="100dp"
+       android:layout_marginTop="20dp"
+       android:text=
+				"Tcpdump command goes here: "
+       android:layout_below="@id/LinearL_2_tcpdumppage"
+         />  
+         
+     <EditText 
+        android:id="@+id/editV_3_tcpdumppage"
+        android:layout_width = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:minWidth="100dp"
+        android:lines="4"
+        android:textSize="13sp"
+        android:gravity="top"
+        android:textColor="#FFFFFF"
+        android:background="#663366"
+        android:padding="2dp"
+        android:layout_marginTop="10dp"
+        android:text="$TCPDUMPARM"
+        android:layout_below="@id/textV_3_tcpdumppage"
+        />
+     
+      <LinearLayout
+        android:id="@+id/linearL_4_tcpdumppage"
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+     	android:layout_marginTop="10dp"
+     	android:layout_below="@id/editV_3_tcpdumppage"
+         >
+    
+    <Button
+     android:id="@+id/bttn_moins_4_tcpdumppage"
+     android:text="Value -"
+     android:textSize="15sp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+        />
+    
+        <Button
+     android:id="@+id/bttn_default_4_tcpdumppage"
+     android:text="Default"
+     android:textSize="15sp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+        />
+     <Button
+     android:id="@+id/bttn_plus_4_tcpdumppage"
+     android:text="Value +"
+     android:textSize="15sp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+        />
+     
+     <Button
+     android:id="@+id/bttn_update_4_tcpdumppage"
+     android:text="Update"
+     android:textSize="15sp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+        />
+     
+      </LinearLayout>
+      
+      <LinearLayout
+        android:id="@+id/linearL_5_tcpdumppage"
+        android:layout_width="fill_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="vertical"
+     	android:layout_marginTop="10dp"
+     	android:layout_below="@+id/linearL_4_tcpdumppage"
+         >
+     
+         <LinearLayout
+        android:id="@+id/linearL_5_3_tcpdumppage"
+        android:layout_width="fill_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+         >
+        <TextView
+        android:id="@+id/textV_5_3_1_tcpdumppage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#BBBBBB"
+        android:textSize="14sp"
+        android:minWidth="30dp"
+        android:text="After which WiFi will be blocked."
+        android:visibility="gone"
+         />
+             
+        </LinearLayout>
+     </LinearLayout>
+      
+      <LinearLayout
+        android:id="@+id/linearL_7_tcpdumppage"
+        android:layout_width="fill_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+     	android:layout_marginTop="10dp"
+     	android:layout_alignParentBottom="true"
+         >
+      <ToggleButton
+        android:id="@+id/toggle_bttn_register_tcpdumppage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textOn="Registerd ~"
+        android:textColor="#66CC33"
+        android:textOff="Let's register!"
+      />
+          
+     <TextView
+        android:id="@+id/textV_rssi_1_tcpdumppage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#BBBBBB"
+        android:textSize="14sp"
+        android:minWidth="30dp"
+        android:text="Rssi  "
+         />
+      
+     <TextView 
+        android:id="@+id/textV_rssi_2_tcpdumppage"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:minWidth="50dp"
+        android:gravity="center"
+        android:lines="1"
+        android:textSize="16sp"
+        android:textColor="#BBBBBB"
+        android:text="UNKNOWN"
+        /> 
+     
+      <ToggleButton
+        android:id="@+id/toggle_bttn_dump_tcpdumppage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textOn="Let's stop!"
+        android:textColor="#66CC33"
+        android:textOff="Let's dump!"
+      />
+     
+     </LinearLayout>
+    
+    
+</RelativeLayout>

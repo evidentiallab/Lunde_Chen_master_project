@@ -1,0 +1,902 @@
+
+\documentclass[12pt,conference,letterpaper]{IEEEtran}
+
+\usepackage{cite}
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+  \usepackage[pdftex]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../pdf/}{../jpeg/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\else
+  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
+  % will default to the driver specified in the system graphics.cfg if no
+  % driver is specified.
+  \usepackage[dvips]{graphicx}
+  % declare the path(s) where your graphic files are
+  %\graphicspath{{../figure/}{../result-and-plot/script/}{../result-and-plot/7slaves-result/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  \DeclareGraphicsExtensions{.eps}
+\fi
+
+\usepackage[cmex10]{amsmath}
+
+\usepackage[font=footnotesize]{subfig}
+
+\usepackage{stfloats}
+
+\usepackage{url}
+
+
+% make changes to the paper visible
+\usepackage{changes}
+
+% correct bad hyphenation here
+\hyphenation{Map-Reduce}
+
+
+% Change table caption style
+\renewcommand{\thetable}{\arabic{table}}
+\renewcommand{\tablename}{Table}
+% Change figure caption style
+\renewcommand{\figurename}{Figure}
+
+
+
+\begin{document}
+
+
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{Memory or Time: Performance Evaluation for Hadoop and Spark}
+
+
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+\author{\IEEEauthorblockN{Lei Gu, Huan Li}
+\IEEEauthorblockA{School of Computer Science and Engineering\\
+Beihang University\\
+gulei@act.buaa.edu.cn, lihuan@buaa.edu.cn}}
+%\and
+%\IEEEauthorblockN{Homer Simpson}
+%\IEEEauthorblockA{Twentieth Century Fox\\
+%Springfield, USA\\
+%Email: homer@thesimpsons.com}
+%\and
+%\IEEEauthorblockN{James Kirk\\ and Montgomery Scott}
+%\IEEEauthorblockA{Starfleet Academy\\
+%San Francisco, California 96678-2391\\
+%Telephone: (800) 555--1212\\
+%Fax: (888) 555--1212}}
+
+% conference papers do not typically use \thanks and this command
+% is locked out in conference mode. If really needed, such as for
+% the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
+% after \documentclass
+
+% for over three affiliations, or if they all won't fit within the width
+% of the page, use this alternative format:
+% 
+%\author{\IEEEauthorblockN{Michael Shell\IEEEauthorrefmark{1},
+%Homer Simpson\IEEEauthorrefmark{2},
+%James Kirk\IEEEauthorrefmark{3}, 
+%Montgomery Scott\IEEEauthorrefmark{3} and
+%Eldon Tyrell\IEEEauthorrefmark{4}}
+%\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Electrical and Computer Engineering\\
+%Georgia Institute of Technology,
+%Atlanta, Georgia 30332--0250\\ Email: see http://www.michaelshell.org/contact.html}
+%\IEEEauthorblockA{\IEEEauthorrefmark{2}Twentieth Century Fox, Springfield, USA\\
+%Email: homer@thesimpsons.com}
+%\IEEEauthorblockA{\IEEEauthorrefmark{3}Starfleet Academy, San Francisco, California 96678-2391\\
+%Telephone: (800) 555--1212, Fax: (888) 555--1212}
+%\IEEEauthorblockA{\IEEEauthorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
+
+% make the title area
+\maketitle
+
+
+\begin{abstract}
+%\boldmath
+Currently, there exist various cluster computing frameworks supporting large-scale data-intensive applications \deleted[remark={delete repeated words}]{on commodity clusters}. \added[remark={Separate Hadoop and Spark and explain why Hadoop is not good for iterative operations}]{Hadoop, an open source implementation of the MapReduce programming model, is a very popular general purpose framework for many different classes of applications. However, Hadoop is not good for iterative operations because of data reloading from disk at each iteration. Spark, an emerging framework, is best suited for iterative operations due to its feature of data cached in memory across machines of cluster in the whole iterative process.} We have conducted some experiments to compare the \replaced[remark={replace "iterative performance" with "system performance for iterative algorithms"}]{system performance for iterative algorithms}{iterative performance} between Hadoop and Spark. From our experimental results, we find that Spark is faster than Hadoop in iterative operations, but it is memory consuming and its speed advantage is weakened \replaced[remark={replace "by insufficient memory" with "at the moment when the memory is not sufficient enough to store newly created intermediate results" to make it more accurate}]{at the moment when the memory is not sufficient enough to store newly created intermediate results}{by insufficient memory}.
+\end{abstract}
+% Benefited from its characteristics of data cached in memory across machines of cluster
+
+% no keywords
+\begin{IEEEkeywords}
+\added[remark={5-10 keywords are required}]{System performance, Hadoop, Spark, PageRank, running time, memory usage}
+\end{IEEEkeywords}
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+
+
+\section{\added[remark={rewrite this section to make it more logical}]{Introduction}}
+% no \IEEEPARstart
+The rapid development of the Internet has generated vast amounts of data which poses great challenges to traditional data processing model. To deal with such challenges, a variety of cluster computing frameworks have been proposed to support large-scale data-intensive applications on commodity machines. MapReduce, introduced by Google\cite{jdean2004} is one such framework for processing large data sets in a scalable, reliable and fault-tolerant manner. 
+%Dryad\cite{michael2007} takes one step forward and provides support for expressing data processing flows as directed acyclic graphs. Haloop and Twister extend MapReduce to support iterative operations.
+
+Apache Hadoop\cite{url_hadoop} provides an open source implementation of MapReduce.
+However, Hadoop is not good for iterative operations which are very common in many applications. MapReduce cannot keep reused data and state information during execution. Thus, MapReduce reads the same data iteratively and materializes intermediate results in local disks in each iteration, requiring lots of disk accesses, I/Os and unnecessary computations. Spark \cite{url_spark} is a MapReduce-like cluster computing framework \cite{matei2010}, which is designed to overcome Hadoop's shortages in iterative operations. Spark introduces a data structure called resilient distributed datasets(RDDs)\cite{matei2012}, through which reused data and intermediate results can be cached in memory across machines of cluster in the whole iterative process. This feature is best suited for low-latency iterative jobs.
+
+
+Although Spark can bring tremendous speedup, we suspect its memory cost behind this huge performance boost. In this paper we evaluate the system performance for iterative algorithms between Hadoop and Spark by choosing a typical iterative algorithm PageRank. We implemented the PageRank algorithm according to the programming models provided by Hadoop and Spark respectively and applied the algorithm to different sizes of graph datasets to compare their running time and memory usage. 
+
+\added[remark={add experimental results}]{Experimental results show that 1) Spark can outperform Hadoop by 10x-15x in Spark's comfort zone which means there is enough memory for the whole iterative process; 2) However, Spark is memory consuming. Although input datasets are not that large compared to the whole memory of the cluster, intermediate results generated at each iteration can easily fill the whole memory of the cluster; 3) Performance advantage of Spark is weakened to be almost the same as and even worse than Hadoop by insufficient memory.}
+
+
+
+\section{\added[remark={This is a newly added section. 1. Briefly introduce Hadoop 2. Intrdouce Spark and explain why Spark designed the RDD data structure  3. Compare Hadoop and Spark in several aspects.}]{System Overview}}
+
+In this section, we provide system overview of Hadoop and Spark and compare the fundamental differences in iterative operations between Hadoop and Spark. Also, we compare Hadoop and Spark in several other aspects.
+
+Apache Hadoop\cite{url_hadoop} provides an open source Java implementation of MapReduce. Hadoop is composed of two layers: a data storage layer called Hadoop distributed file system (HDFS) and a data processing layer called Hadoop MapReduce Framework. HDFS is a block-structured file system managed by a single master node. A processing job in Hadoop is broken down to as many Map tasks as input data blocks and one or more Reduce tasks. It is a general purpose framework suitable for many different types of applications, such as log analysis, web crawler, index building, and machine learning. However, Hadoop shows poor performance in iterative operations. An iterative operation can be expressed as multiple Hadoop MapReduce jobs. Different MapReduce jobs cannot keep and share data. So in iterative operations, frequent used data has to be read from and written to HDFS multiple times which incurs lots of disk accesses, I/Os and unnecessary computations\cite{jaliya2010} \cite{yingyi2010} \cite{yanfeng2011} at each iteration.
+
+Spark is a new cluster computing framework which is more general and efficient than Hadoop. Spark does not have its own distributed file system. Instead, it uses Hadoop supported storage systems(e.g, HDFS, HBase) as its input source and output destination. In order to overcome Hadoop's shortages in iterative operations, Spark introduced a data structure called resilient distributed datasets(RDDs). The runtime of Spark consists of a driver and multiple workers. Before an iterative operation, the user's driver program will launch multiple workers. These workers will read data blocks from a distributed file system and cache them in their own memory as partitions of RDD. These partitions form a whole RDD from the view of the driver program. The RDD feature of Spark avoids data reloading from disk at each iteration which dramatically speeds up the iterative operation. Users can explicitly persist reused data and intermediate results in memory in the form of RDDs, control their partitioning to optimize data placement, and manipulate them using a rich set of operators. Since RDDs are partitioned across the memory of machines in the cluster, they can be processed in parallel. RDDs are fault-tolerant which means they can be rebuilt if a partition of them is lost. RDDs are read-only, so changes to current RDDs will cause creation of new RDDs.
+
+
+Finally, we compare Hadoop and Spark in the following aspects.
+  \begin{itemize}
+   \item Implementation language: Hadoop-Java, Spark-Scala.
+   
+   \item Programming language: Hadoop-Java, Spark-Scala. Scala integrates features of object-oriented and functional languages which makes applications implementation in Spark more concise and elegant. Algorithms implemented by Spark is always shorter than those implemented by Hadoop.
+   
+   \item Independence of storage: Both platforms are independent from underlying storage layers.(Spark can read data from any Hadoop input source, e.g., HDFS, HBase, using Hadoop's existing input plugin APIs)   
+   
+   \item Parallelism: In Hadoop, a job can be divided into multiple small Map and Reduce tasks running in machines of a cluster which provide high parallelism. In Spark, a job can launch multiple workers in machines of a cluster which can also provide high parallelism. 
+   
+   \item Fine-grained fault-tolerance: both platforms can re-run failed or slow tasks on other nodes
+   
+   \item Expressivity: MapReduce in Hadoop can express many statistical and learning algorithms. While RDDs in Spark are more expressive. The operators provided by RDDs can not only express MapReduce models, they can also express models like DryadLINQ, SQL and Pregel.
+   
+   \item High Level language(Delarative Query Language) support: Hadoop has Pig Latin and HiveQL, while Spark has Shark.
+  \end{itemize}
+
+
+
+
+%HDFS is inefficient for handling small files. Hadoop MapReduce is a batch-based architecture which means it does not lend itself to use cases which needs real-time data access.
+
+%The framework is memory based and also retains the reliability and fault tolerance of MapReduce.
+
+
+\section{Experimental Environment}
+This section presents our experimental cluster architecture and shows graph datasets used in the experiment.
+
+\subsection{Cluster Architecture}
+The experimental cluster is composed of eight computers. One of them is designated as master, and the other seven as slaves. We use the operating system Ubuntu 12.04.2(GNU/Linux 3.5.0-28-generic x86 64) for all the computers.
+
+Table \ref{tab:machine_info} shows the hostname, machine modal, IP address, CPU and memory information of the eight computers mentioned above. All of the eight computers are in the same Local Area Network and connected by a H3C S5100 switch whose port rate is 100Mbps. In order to facilitate description, we will use hostnames to reference cluster computers. All of the eight computers have 4 cores, but master and slaves have different frequencies. From the table we can also see that the master has more total amount of memory than slaves, and that the amount of free memory of each host is about 3400 MB.
+
+% master: 3.10 GHz  1600 MHz
+% slave1: 2.83 GHz  2825 MHz
+% slave2: 2.83 GHz  2825 MHz
+% slave3: 2.83 GHz  2825 MHz
+\begin{table*}[!t]
+\renewcommand{\arraystretch}{1.2}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\bfseries Hostname & \bfseries Machine Modal & \bfseries IP & \bfseries CPU Info & \bfseries Total Memory & \bfseries Free Memory\\
+\hline
+master & Dell Optiplex 790 & 192.168.2.99 & Intel i5 3.10GHz & 3910MB & \~{}3400MB\\
+\hline
+slave0 & Dell Optiplex 980 & 192.168.2.100 & Intel i5 3.20GHz & 3816MB & \~{}3400MB\\
+\hline
+slave1-slave6 &  Dell Optiplex 960 & 192.168.2.101-192.168.2.106 & Intel 2 Quad 2.83GHz & 3825MB & \~{}3400MB\\
+\hline
+\end{tabular}
+\caption{Information of machines in the cluster.}
+\label{tab:machine_info}
+\end{table*}
+
+
+Apache Mesos is a cluster manager that provides efficient resource isolation and sharing across distributed frameworks. It can run Hadoop, Spark, MPI, Hypertable and other frameworks. We use Mesos to manage the resources of our experimental cluster. Figure \ref{fig:cluster-architec} shows the architecture of the experimental cluster. Each slave in the experimental cluster contributes 4 CPU cores and 3072 MB(i.e, 3GB) memory to Mesos. So the total resources managed by Mesos are 28 CPU cores and 21 GB memory. When a job is submitted to Hadoop or Spark, Mesos will allocate resources to it according to its needs. 
+
+We use Mesos 0.9.0, Hadoop 0.20.205.0 and Spark 0.6.1 for all the experiments below. The reason why we choose Mesos 0.9.0 and Spark 0.6.1 is that they are relatively new stable release. Although Hadoop 1.1.2 is the most recent stable release as of writing this paper, only Hadoop 0.20.205.0 is ported to run on mesos. \replaced[remark={the reason why we choose Hadoop 0.20.205.0 is that we want both Hadoop and Spark run over Mesos, so they can have the same experimental conditions, i.e., 28 CPU cores and 21 GB memory.}]{We choose Hadoop 0.20.205.0 in order to let Spark and Hadoop share the same experimental conditions.}{We have to choose Hadoop 0.20.205.0 in order to make Spark and Hadoop have the same experimental conditions.} We also install Hadoop 1.1.2 separately to repeat the experiment, and find that the new version Hadoop does have performance improvement and the improvement is a constant under different graph datasets.  
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=0.3\textwidth]{figures/cluster-architect.eps}
+\caption{Cluster architecture.}
+\label{fig:cluster-architec}
+\end{figure}
+
+
+\subsection{Dataset Description}
+\label{subsec:dataset_des}
+
+\added[remark={Point out the factors which may affect the performance of PageRank, then choose our datasets according to the factors.}]{Data size and data connectedness are two important properties of a specific dataset. In terms of graph dataset, the number of nodes reflects its size and the number of edges reflects its internal connectedness. These two properties have great impact on the running time and memroy usage of the PageRank algorithm. Also, PageRank run on directed graphs. So we will choose directed graphs with different node number and edge number as our experimental datasets.}
+
+
+We choose five real \replaced[remark={replace "graph" with "graph datasets"}]{graph datasets}{graph} and generate five synthetic graph datasets to do comparative experiments. Table \ref{tab:attribs_graphs} lists these ten graph datasets. The five real graph datasets come from the website of Stanford SNAP \cite{url_snap}. The five synthetic graph datasets are generated by stochastic Kronecker graph \cite{jurij2005} genrator and have similar properties as real-world graphs, such as heavy tails for in- and out-degree distribution, small diameters, and densification and shrinking diameters over time. We will use the name attribute to reference the specific graph dataset in the following description.
+
+%More specifically, each line in a graph dataset file is in the form of ``$n_i\;n_j$'' which represents a directed arc from node $i$ to node $j$. 
+
+%In order to observe these two properties more intuitively, we plot them in Figure \ref{fig:node_edge_number}. From Figure \ref{fig:node_edge_number} we can see that the node numbers gradually increases from wiki-Vote to kronecker2 except web-Google which is slighly bigger than its subsequent web-BerkStan and the edge numbers exhibit exponential increasing trend from wiki-vote to kronecker2.
+
+%We use longest shortest path as the diameter of a graph. The fifth column of Table \ref{tab:attribs_graphs} gives the diameters of different graphs. As the graph size and connectedness increases, the graph diameter exhibits a shrinking trend except web-Stanford and web-BerkStan.
+
+%From Figure \ref{fig:wiki-Votedegreedist} to Figure \ref{fig:kronecker2degreedist}, We also plot the in-degree and out-degree distributions of different graphs. The degree distributions of all the graphs have heavy tails. The in-degree distributions of all the graphs meet the power law distribution. For out-degree distributions, all the graphs apart from web-Stanford and web-BerkStan meet the power law distribution.
+
+%From the properties of diameters and degree distributions of different graphs, we can conclude that the two graphs web-Stanford and web-BerkStan are different from the other graphs.
+
+
+\begin{table*}[!t]
+\renewcommand{\arraystretch}{1.2}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\bfseries Name & \bfseries File Size & \bfseries Nodes & \bfseries Edges & \bfseries Description\\
+\hline
+wiki-Vote & 1.0 MB & 7,115 & 103,689 & Wikipedia who-votes-on-whom network\\
+\hline
+soc-Slashdot0902 & 10.8 MB & 82,168 & 948,464 & Slashdot social network from February 2009\\
+\hline
+web-Google & 71.9 MB & 875,713 & 5,105,039 & Web graph from Google\\
+\hline
+cit-Patents & 267.5 MB & 3,774,768 & 16,518,948 & Citation network among US Patents\\
+\hline
+Twitter & 1.3 GB & 11,316,811 & 85,331,845 & Twitter social network on who follows whom network\\
+\hline
+19.txt & 40 MB & 416,962 & 3,206,497 & Synthetic graph generated by Kronecker generator
+ with 19 iterations.\\
+\hline
+20.txt & 89MB & 833,566 & 7,054,294 & Synthetic graph generated by Kronecker generator
+ with 20 iterations.\\
+\hline
+21.txt & 209MB & 1,665,554 & 15,519,448 & Synthetic graph generated by Kronecker generator
+ with 21 iterations.\\
+\hline
+22.txt & 479MB & 3,330,326 & 34,142,787 & Synthetic graph generated by Kronecker generator
+ with 22 iterations.\\
+\hline
+23.txt & 1.1GB & 6,654,956 & 75,114,133 & Synthetic graph generated by Kronecker generator
+ with 23 iterations.\\
+\hline
+\end{tabular}
+\caption{Graph Datasets.}
+\label{tab:attribs_graphs}
+\end{table*}
+
+
+% \begin{figure*}[!t]
+% \centering
+% \includegraphics[width=0.3\textwidth]{dataset/dataset.eps}
+% \caption{Plots of nodes number and edges number of different datasets.}
+% \label{fig:node_edge_number}
+% \end{figure*}
+
+
+
+\section{Implementation}
+This section presents the implementation of PageRank algorithm on Hadoop and Spark platforms.
+
+\subsection{\added[remark={delete unneccessary content}]{PageRank Overview}}
+The basic idea behind PageRank is that a node which is linked to by a large number of high quality nodes tends to be of high quality. In order to measure a node's quality, an authoritive value called PageRank value can be assigned to each node in the whole graph. 
+
+%So in the graph context, nodes that have high PageRank values are those that have high in-degrees and are linked to by other nodes with high PageRank values.
+
+%The random surfer model \cite{page1999} can be utilized to better understand PageRank. PageRank was used to simulate where Web surfers, starting at a random page, would tend to congregate if they followed randomly chosen outlinks from the page at which they were currently located, and this process were allowed to iterate many times. Pages that would have a large number of surfers were considered more ``important'' than pages that would rarely be visited. In a nutshell, PageRank value represents the likelyhood that a random walk over the link structure will arrive at a particular node. 
+
+Formally, the PageRank $P$ of a node $n$ is defined as follows:
+\begin{equation}
+P(n) = \sum_{m \in L(n)} \frac{P(m)}{C(m)} \label{eq:pagerank_simple}
+\end{equation}
+where $L(n)$ is the set of nodes that link to $n$, $P(m)$ is the PageRank of node $m$, $C(m)$ is the out-degree of node $m$.
+
+%Formula \ref{eq:pagerank_simple} is actually a simplified version of PageRank definition and is only suited for a strongly connected graph. However, graphs in real world are not that perfect. So, the simplified version of PageRank needs to be modified to deal with some special structures of real graphs.
+
+There are two anomalies we need to prevent. The first one involves the structures called $spider\;traps$ which are groups of nodes that all have outlinks but they never link to any other nodes outside the groups. This will cause the PageRank calculation to place all the PageRank within the spider traps. The second one is related to dangling nodes which are nodes in the graph that have no outlinks. The total PageRank mass will not be conserved because of dangling nodes.
+
+To deal with the first problem, a random jump factor $\alpha$ can be added to the Formula \ref{eq:pagerank_simple}. According to \cite{monica2005}, the second problem can be solved by redistributing PageRank mass ``lost'' at dangling nodes across all nodes in the graph evenly.
+
+% With probability $\alpha$ the random surfer executes a random jump, and with probability $(1 - \alpha)$ the random surfer follows an outlink. Formula \ref{eq:pagerank_1} gives solution to the first problem. 
+% \begin{equation}
+% P(n) = \alpha (\frac{1}{|G|}) + (1 - \alpha) \sum_{m \in L(n)} \frac{P(m)}{C(m)} \label{eq:pagerank_1}
+% \end{equation}
+% where $|G|$ is the total number of nodes in the graph, $\alpha$ is the random jump factor.The random jump factor $\alpha$ is sometimes called the ``teleportation'' factor; alternatively, $(1 - \alpha)$ is referred to as the ``damping'' factor.
+
+% This redistribution process can be accomplished by iterate over all nodes again. At the same time, we can take into account the random jump factor. 
+For node $n$, its current PageRank value $P(n)$ is updated to the final PageRank value $P(n)'$ according to the following formula:
+\begin{equation}
+P(n)' = \alpha (\frac{1}{|G|}) + (1 - \alpha) (\frac{m}{|G|} + P(n)) \label{eq:pagerank_2}
+\end{equation}
+where $|G|$ is the total number of nodes in the graph, $\alpha$ is the random jump factor, $m$ is the PageRank mass ``lost'' at dangling nodes.
+
+
+\subsection{\added[remark={delete the algorithm implementation on Hadoop, because our implementation references other's implementation.}]{PageRank on Hadoop}}
+PageRank implementation on Hadoop is well-known. Our PageRank implementation on Hadoop mainly reference the algorithm in\cite{jimmy2010}. Due to space limitations, we will not present the PageRank algorithm on Hadoop.
+
+The basic process of each PageRank iteration can be divided into two phases each of which corresponds to a MapReduce job. We call the first phase phase 1 and the second phase 2.
+
+Phase 1 deals with PageRank distribution and aggregation at each node. Each node passes its PageRank contributions to the nodes that it is connected to. This distribution process can be implemented by a Mapper. To conclude phase 1, each node sums up all PageRank contributions that have been passed to it. This aggregation process can be implemented by a Reducer. 
+
+Extra operations need to be done to prepare for phase 2. The operations are to read the result files generated by Phase 1 line by line to extract and sum all the PageRank masses each node gets. Since dangling nodes will not distribute their PageRanks to other nodes because of their zero out-degree, we can get the total of PageRank loss at all dangling nodes in the graph by using one minus the sum. The PageRank loss will be used in phase 2.
+
+Phase 2 deals with the PageRank loss and the random jump factor. The PageRank loss computed before can then be evenly distributed to all the nodes in the graph. The random jump factor can also be added at each node. Phase 2 can be implemented by a Mapper only job.
+
+% Hadoop provides an open source implementation of MapReduce programming model. This subsection gives a detailed description of our implementation of PageRank on Hadoop platform using the interfaces exposed by Hadoop platform.
+
+% There are four major components in MapReduce: $Mapper$, $Reducer$, $Partitioner$, and $Combiner$. $Mapper$ is used for data filtering and transformation. $Reducer$ is used for global data aggregation. $Partitioner$ provides some criteria to distribute data generated by Mapper to a specific Reducer. $Combiner$ is used for local aggregation. Of all the four components, $Mapper$ and $Reducer$ are at the core of MapReduce. We mainly implement these two components and use the default implementation of the other components provided by Hadoop.
+
+% To implement PageRank algorithm on Hadoop platform, two steps need to be gone through. The first one is to represent graph with adjacency list and meanwhile initialize
+% PageRank value for each node. The second one is PageRank iterations. Below are detailed descriptions of the two steps in MapReduce programming model.
+
+% \subsubsection{Step 1. Data preprocessing}
+
+% Each line in the original graph dataset file is in the form of ``$n_i\;n_j$'', which represents a directed edge from node $i$ to node $j$. In step 1, we need to collect all the nodes each node links to and meanwhile initialize the PageRank value for each node. For example, if node A links to node B, C, and D, there should be three lines in the form of ``A B'', ``A C'' and ``A D'' scattered in the original graph dataset file. In step 1, we need to collect nodes B, C, D for node A, and generate a single line in the form of ``A B,C,D''. Meanwhile, we need to initialize a PageRank value for node A. So the line would become ``A oldPR,curPR,B,C,D''. In the initialzation process, oldPR is assigned to 0 and curPR is assigned to $\frac{1}{N}$ where $N$ is the number of nodes in a specific graph dataset.
+
+% Pseudo-code of data preprocessing in MapReduce is shown in Algorithm \ref{algo:hadoop_datapre_mapper} and \ref{algo:hadoop_datapre_reducer}. Note that in all the algorithms we present key-value pair is represented in the form of ``$K \rightarrow V$''.
+
+% % data preprocessing Mapper
+% \begin{algorithm}[!t]  
+%   \caption{data preprocessing: Mapper}
+%   \label{algo:hadoop_datapre_mapper}
+%   \dontprintsemicolon
+%   \SetKwFunction{MAP}{map}\SetKwFunction{REDUCE}{reduce}\SetKwFunction{EMIT}{emit}
+%   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+%   \Input{line offset $\rightarrow$ node$i$ node$j$}
+%   \Output{node$i$ $\rightarrow$ node$j$}  
+%   \BlankLine
+%   \MAP{line offset, node$i$ node$j$}\;
+%       \Indp \Indp 
+%       $K \leftarrow$ node$i$\;
+%       $V \leftarrow$ node$j$\;
+%       \EMIT{$K$, $V$}\;
+% \end{algorithm}
+
+% % data preprocessing Reducer
+% \begin{algorithm}[!t]
+%   \caption{data preprocessing: Reducer}
+%   \label{algo:hadoop_datapre_reducer}
+%   \dontprintsemicolon
+%   \SetKwFunction{MAP}{map}\SetKwFunction{REDUCE}{reduce}\SetKwFunction{EMIT}{emit}
+%   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+%   \Input{node$i$ $\rightarrow$ $<$node$x$,node$y$,node$z$\ldots{}$>$}
+%   \Output{node$i$ $\rightarrow$ $<0,\frac{1}{N}$,node$x$,node$y$,node$z$\ldots{}$>$}
+%   \tcp{N is the total number of nodes in the graph}
+%   \BlankLine
+%   \REDUCE{node$i$, $<$node$x$,node$y$,node$z$\ldots{}$>$}\;
+%        \Indp \Indp
+%         $K \leftarrow$ node$i$\;
+%         $V \leftarrow$ $<0,\frac{1}{N}$,node$x$,node$y$,node$z$\ldots{}$>$\;
+%         \EMIT{$K$, $V$}\;
+% \end{algorithm}
+
+% \subsubsection{Step 2. PageRank iteration}
+% After data preprocessing, we can proceed to perform PageRank iteration. Since it is iterative operation, the output format of previous iteration should be consistent with the input format of next iteration. 
+
+% The basic process of each iteration can be divided into two phases each of which corresponds to a MapReduce job. We call the first phase phase 1 and the second phase 2.
+
+% Phase 1 deals with PageRank distribution and aggregation at each node. Each node passes its PageRank contributions to the nodes that it is connected to. Since PageRank is a probability distribution, we can think of this as spreading probability mass to neighbors via outgoing links. This distribution process can be implemented by a Mapper which is shown in Algorithm \ref{hadoop_pr_phase1_mapper}. To conclude phase 1, each node sums up all PageRank contributions that have been passed to it. This aggregation process can be implemented by a Reducer which is shown in Algorithm \ref{hadoop_pr_phase1_reducer}. 
+
+% Extra operations need to be done to prepare for phase 2. The operations are to read the result files generated by Phase 1 line by line to extract and sum all the PageRank masses each node gets. Since dangling nodes will not distribute their PageRanks to other nodes because of their zero out-degree, we can get the total of PageRank loss at all dangling nodes in the graph by using one minus the sum. The PageRank loss will be used in phase 2.
+
+% Phase 2 deals with the PageRank loss and the random jump factor. The PageRank loss computed before can then be evenly distributed to all the nodes in the graph. The random jump factor can also be added at each node. Phase 2 can be implemented by a Mapper which is shown in Algorithm \ref{hadoop_pr_phase2_mapper}.
+
+% Pseudo-code of PageRank iteration in MapReduce is shown in Algorithm \ref{hadoop_pr_phase1_mapper}, \ref{hadoop_pr_phase1_reducer} and \ref{hadoop_pr_phase2_mapper}. Note that the iteration stops when the stopping criteria is met as discussed earlier.
+
+% % PageRank iteration Mapper
+% \begin{algorithm}[!t]
+%    \caption{PageRank iteration phase 1: Mapper}
+%    \label{hadoop_pr_phase1_mapper}
+%    \dontprintsemicolon
+%    \SetKwFunction{MAP}{map}\SetKwFunction{REDUCE}{reduce}\SetKwFunction{EMIT}{emit}
+%    \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+%    \Input{node$i$ $\rightarrow$ $<$oldPR,curPR,node$x$,node$y$,node$z$\ldots{}$>$}
+%    \Output{node$i$ $\rightarrow$ curPR}
+%    \Output{node$x$ $\rightarrow$ PR contribution from node$i$;\\node$y$ $\rightarrow$ PR contribution from node$i$;\\node$z$ $\rightarrow$ PR contribution from node$i$;\\ \ldots}
+%    \Output{node$i$ $\rightarrow$ $<$node$x$,node$y$,node$z$\ldots{}$>$}
+%    \BlankLine
+%    \MAP{node$i$, $<$oldPR,curPR,node$x$,node$y$,node$z$\ldots{}$>$}\;
+%       \Indp \Indp
+%       $K1 \leftarrow$ node$i$\;
+%       $V1 \leftarrow curPR$\;
+%       \EMIT{$K1$, $V1$}\;
+%       \BlankLine
+%       $L \leftarrow$ $<$node$x$,node$y$,node$z$\ldots{}$>$\;
+%       $N \leftarrow$ length of $L$\;
+%       $contrib \leftarrow \frac{curPR}{N}$\;      
+%       \lForEach{node in $L$}{\\
+%         \Indp \Indp
+%         $K2 \leftarrow$ node\;
+%         $V2 \leftarrow contrib$ \;
+%         \EMIT{$K2$, $V2$}\; 
+%       }\;
+%       \BlankLine
+%       \Indm \Indm
+%       $K3 \leftarrow$ node$i$\;
+%       $V3 \leftarrow  L$\;
+%       \EMIT{$K3$, $V3$}\;
+% \end{algorithm}
+
+
+% % PageRank iteration Reducer
+% \begin{algorithm}[!t]  
+%    \caption{PageRank iteration phase 1: Reducer}
+%    \label{hadoop_pr_phase1_reducer}
+%    \dontprintsemicolon
+%    \SetKwFunction{MAP}{map}\SetKwFunction{REDUCE}{reduce}\SetKwFunction{EMIT}{emit}
+%    \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+%     \Input{node$i$ $\rightarrow$ curPR}
+%     \Input{node$i$ $\rightarrow$ $<$contrib1, contrib2, contrib3\ldots{}$>$}
+%     \Input{node$i$ $\rightarrow$ $<$node$x$,node$y$,node$z$\ldots{}$>$}
+%     \Output{node$i$ $\rightarrow$ $<$oldPR,contribSum,node$x$,node$y$,node$z$\ldots{}$>$}
+
+%     \BlankLine
+%     \REDUCE{node$i$, $Input$}\;
+%       \Indp \Indp
+%       $K \leftarrow$ node$i$\;
+%       \If{$Input$ in the form of node$i$ $\rightarrow$ curPR}{
+%         $V1 \leftarrow curPR$\;
+%       }\;
+%       \If{$Input$ in the form of node$i$ $\rightarrow$ $<$contrib1, contrib2, contrib3\ldots{}$>$}{
+%         $CList \leftarrow$ $<$contrib1, contrib2, contrib3\ldots{}$>$\;
+%         $V2 \leftarrow 0$\;
+%         \lForEach{contrib in $CList$}{\\
+%           \Indp \Indp
+%           $V2 = V2 + $ contrib\;
+%         }\;               
+%       }\;
+%       \If{$Input$ in the form of node$i$ $\rightarrow$ $<$node$x$,node$y$,node$z$\ldots{}$>$}{
+%         $V3 \leftarrow$ $<$node$x$,node$y$,node$z$\ldots{}$>$\;
+%       }\;
+%       \EMIT{$K$, $<V1,V2,V3>$}\;
+% \end{algorithm}
+
+
+
+% \begin{algorithm}[!t]
+%    \caption{PageRank iteration phase 2: Mapper}
+%    \label{hadoop_pr_phase2_mapper}
+%    \dontprintsemicolon
+%    \SetKwFunction{MAP}{map}\SetKwFunction{REDUCE}{reduce}\SetKwFunction{EMIT}{emit}
+%    \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+%    \Input{node$i$ $\rightarrow$ $<$oldPR,contribSum,node$x$,node$y$,node$z$\ldots{}$>$}
+%    \Output{node$i$ $\rightarrow$ $<$oldPR,curPR,node$x$,node$y$,node$z$\ldots{}$>$}   
+%    \BlankLine
+%    \MAP{node$i$, $<$oldPR,contribSum,node$x$,node$y$,node$z$\ldots{}$>$}\;
+%       \Indp \Indp
+%       $K1 \leftarrow$ node$i$\;
+%       $p \leftarrow$ contribSum\;
+%       $m \leftarrow$ PageRank loss\;
+%       $N \leftarrow$ number of nodes in the graph\;      
+%       $p' = \alpha\times\frac{1}{N} + (1 - \alpha) \times (\frac{m}{N} + p)$\;
+%       $V1 \leftarrow$ $<$oldPR,$p'$,node$x$,node$y$,node$z$\ldots{}$>$
+%       \EMIT{$K1$, $V1$}\;      
+% \end{algorithm}
+
+\subsection{\added[remark={Point out our implementation on Spark is different from the Spark authors'. }]{PageRank on Spark}}
+The authors who invented Spark provide a simple implementation of PageRank on Spark. But their implementation did not consider the dangling nodes in the graph. There are actually a large number of dangling nodes in both real and synthetic graphs. Dealing with dangling nodes is a necessary step, so we reimplement PageRank on Spark by taking into account the dangling nodes in order to make the PageRank implementation on Hadoop and Spark be consistent and practical.
+
+All the iterative operations can be implemented in a Spark driver. Each iteration includes four steps. The first step distributes the PageRank value of each node to its neighbors using the join and flatMap transformation. The second step does PageRank aggregation for each node using reduceByKey transformation. In the third step, PageRank loss at dangling nodes is computed. The fourth step deals with PageRank loss distribution and random jump factor. 
+
+% Spark revolves around the concept of $resilient\;distributed\;dataset$ (RDD), which is a fault-tolerant collection of elements that can be operated on in parallel. There are currently two types of RDDs: $parallelized\;collections$, which take an existing Scala collection and run functions on it in parallel, and $Hadoop\;datasets$, which run functions on each record of a file in Hadoop distributed file system or any other storage system supported by Hadoop.
+
+% Iterative operations can be implemented by Spark jobs. Before each Spark job, dataset of interest can first be loaded from disk into the memory and represented as RDD across machines of the whole cluster. Then the job can be run with data(in RDD form) kept in memory for the whole iterative process. After job running, results can be written to disk. Fewer disk accesses and memory based process contribute to its performance improvements.
+
+% RDDs support two types of operations: $transformations$, which create a new dataset from an existing one, and $actions$, which return a value to the driver program after running a computation on the dataset. Some common transformations and actions supported by RDD and their meanings are listed in Table \ref{tab:rdd_transformations} and Table \ref{tab:rdd_actions} separately. 
+
+% \begin{table*}[!t]
+% \renewcommand{\arraystretch}{1.2}
+% \centering
+% \begin{tabular}{|c|p{10cm}|}
+% \hline
+% \bfseries Transformation & \bfseries Meaning\\
+% \hline
+% map($func$) & Return a new distributed dataset formed by passing each element of the source through a function $func$.\\
+% \hline
+% flatMap($func$) & Similar to map, but each input item can be mapped to 0 or more output items (so $func$ should return a Seq rather than a single item).\\
+% \hline
+% reduceByKey($func$) & When called on a dataset of (K, V) pairs, returns a dataset of (K, V) pairs where the values for each key are aggregated using the given reduce function.\\
+% \hline
+% join($otherDataset$) & When called on datasets of type (K, V) and (K, W), returns a dataset of (K, (V, W)) pairs with all pairs of elements for each key.\\
+% \hline
+% \end{tabular}
+% \caption{Common transformations supported by RDD.}
+% \label{tab:rdd_transformations}
+% \end{table*}
+
+% \begin{table*}[!t]
+% \renewcommand{\arraystretch}{1.2}
+% \centering
+% \begin{tabular}{|c|p{10cm}|}
+% \hline
+% \bfseries Action & \bfseries Meaning\\
+% \hline
+% reduce($func$) & Aggregate the elements of the dataset using a function $func$ (which takes two arguments and returns one). The function should be associative so that it can be computed correctly in parallel.\\
+% \hline
+% count() & Return the number of elements in the dataset.\\
+% \hline
+% saveAsTextFile($path$) & Write the elements of the dataset as a text file (or set of text files) in a given directory in the local filesystem, HDFS or any other Hadoop-supported file system. Spark will call toString on each element to convert it to a line of text in the file.\\
+% \hline
+% \end{tabular}
+% \caption{Common actions supported by RDD.}
+% \label{tab:rdd_actions}
+% \end{table*}
+
+% To implement PageRank algorithm on Spark platform, two steps are also required. The first one is to represent the graph with adjacency list which is similar to that of Hadoop but without PageRank initialization. This step can be implemented by making small modifications to that of Hadoop. The second one is PageRank iterations. we mainly focus on the implementation of the second step.
+
+% Before iteration, we need to compute the number of nodes in the graph and construct two RDDs. The first RDD is a pair list of (node, neighbors) with node standing for the id of a specific node in the graph and neighbors standing for a list of ids this node links to. The second RDD is a pair list of (node, rank) with node also standing for the id of a specific node in the graph and rank standing for the PageRank value of this node and being set to 1/N at the beginning.
+
+% Then we can proceed to do PageRank iterations. Each iteration includes four steps. The first step distributes the PageRank value of each node to its neighbors using the join and flatMap transformation. The second step does PageRank aggregation for each node using reduceByKey transformation. In the third step, PageRank loss at dangling nodes is computed. The fourth step deals with PageRank loss distribution and random jump factor. 
+
+% After PageRank iterations, the rank for each node can be saved using saveAsTextFile action.
+
+% The detailed PageRank implementation on Spark is shown in Algorithm \ref{algo:spark_pr}.
+
+% % Spark PageRank iteration
+% \begin{algorithm}[!t]
+% \caption{Spark PageRank iteration}
+% \label{algo:spark_pr}
+% \begin{algorithmic}
+% \STATE val N = // number of nodes in the graph
+% \STATE val links =  // RDD of (node, neighbors) pairs
+% \STATE var ranks =  // RDD of (node, rank) pairs
+% \FOR{$i=0$ to $ITERATIONS$}
+% \STATE // PageRank distribution
+% \STATE val contribs = links.join(ranks).flatMap(\{
+%   case (node, (neighbors, rank)) $=>$ neighbors.map(neighbor $=>$ (neighbor, rank/neighbors.size))
+% \})
+% \STATE // PageRank aggregation
+% \STATE ranks = contribs.reduceByKey($\_ + \_$)
+% \STATE // PageRank loss computation
+% \STATE dMass = ranks.reduce(($p1$, $p2$) $=>$ ("dm", $p1.\_2 + p2.\_2$)).\_2
+% \STATE lMass = 1 - dMass
+% \STATE // PageRank loss distribution and random jump factor treatment
+% \STATE ranks = ranks.mapValues($v => \alpha\times\frac{1}{N} + (1 - \alpha) \times (\frac{lMass}{N} + v)$)
+% \ENDFOR 
+% \STATE ranks.saveAsTextFile(...)
+% \end{algorithmic}
+% \end{algorithm}
+
+
+
+
+% %Bagel operates on a graph represented as a distributed dataset of (K, V) pairs, where keys are vertex IDs and values are vertices plus their associated state. In each superstep, Bagel runs a user-specified compute function on each vertex that takes as input the current vertex state and a list of messages sent to that vertex during the previous superstep, and returns the new vertex state and a list of outgoing messages.
+
+% %In the experiment, we use Bagel to implement PageRank, and we only need to implement the user-specified compute function that Bagel exposes to us. The input of the compute function is a specific node containing its current PageRank value combined with a list of PageRank contribution shares from the nodes that link to it. The output is the specific node itself plus a list of contribution shares that will be distributed to the nodes to which this specific node links. So in the compute function, two things need to be done: aggregate the contribution shares from all the followers of a specific node to generate a new PageRank value and evenly distrutes the new value to all its followees. All the other things will be handled by the Bagel utility. Pseudo-code of the user-specified compute function for PageRank is shown in Algorithm 5.
+
+% Spark Bagel PageRank
+% \begin{algorithm}[!t]  
+%    \caption{Spark PageRank iteration}
+%    \dontprintsemicolon
+%    \SetKwFunction{COMP}{compute}\SetKwFunction{EMIT}{emit}
+%    \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+%     \Input{node$i$, $<$contrib1, contrib2, contrib3\ldots{}$>$}   
+%     \Output{node$i$,$<$(node$x$, share),(node$y$, share), (node$z$, share)\ldots{}$>$}
+
+%     \BlankLine
+%     \COMP{node$i$, $<$contrib1, contrib2, contrib3\ldots{}$>$}\;
+%       \Indp \Indp        
+%       $K \leftarrow$ node$i$\;
+%       $CList \leftarrow$ $<$contrib1, contrib2, contrib3\ldots{}$>$\;
+%         $V2 \leftarrow 0$\;
+%         \lForEach{contrib$i$ in $CList$}{\\
+%           \Indp \Indp
+%           $V2 = V2 + $ contrib$i$\;
+%         }\;
+%        \Indm \Indm
+%         $N \leftarrow$ number of nodes in the graph\;
+%         $V2 = (1 - \alpha) \times V2 + \alpha\times\frac{1}{N}$\;
+%         $K.value = V2$\;
+%         $LList = K.links$\;
+%         $NSList = NULL$\;
+%         $S = \frac{V2}{LList.length}$\;
+%         \lForEach{node$i$ in $LList$}{\\
+%           \Indp \Indp
+%           $NSList.add(nodei, S)$\;
+%         }\;    
+%       \Indm \Indm
+%       \EMIT{$K$, $NSList$}\;
+% \end{algorithm}
+
+
+\section{Results}
+ This section shows the results of our experiments. We study the scalability of our PageRank implementations on Hadoop and Spark and compare the running time and memory usage of our PageRank implementations on both platforms under different sizes of datasets.
+
+\subsection{PageRank Scalability}
+% Ensuring that there are no inherent bottlenecks as algorithms are applied to increasingly larger datasets. The gold standard, of course is linear scalability, an algorithm running on twice the amount of data should take only twice as long. Similarly, an algorithm running on twice the number of nodes should only take half as long.
+In this subsection, we study the scalability of our PageRank implementations on Hadoop and Spark.
+
+\begin{figure*}[!t]
+    \centering
+      \subfloat[Real Graphs]{       
+        \includegraphics[width=0.5\textwidth]{figures/real-nodes-time.eps}
+        }
+      \subfloat[Synthetic Graphs]{        
+        \includegraphics[width=0.5\textwidth]{figures/synthetic-nodes-time.eps}}
+    \caption{Running time versus number of nodes with PageRank on real graphs and synthetic graphs for five iterations.}
+    \label{fig:time_vs_size}
+\end{figure*}
+
+For each dataset we make PageRank run five times on both Hadoop and Spark, and record the time each dataset spends. Figure \ref{fig:time_vs_size} shows running time versus number of nodes for real graphs and synthetic graphs.
+
+We mainly have 2 observations for this reuslt. 1) When datasets are smaller than 22.txt, our PageRank implementations exhibit near-linear scalability on both Hadoop and Spark whether the graphs are real or synthetic. 2) When datasets are bigger than 22.txt, slope of Spark line is greater than that of Hadoop line which means that the performance advantage of Spark becomes smaller as the graph size increases.
+
+\subsection{Running Time Comparison}
+In this subsection, we compare the running time between Hadoop and Spark.
+
+\begin{figure*}[!t]
+\centering
+\subfloat[Real Graphs]{
+  \includegraphics[width=0.5\textwidth]{figures/real-5iterations-time.eps}}
+\subfloat[Synthetic Graphs]{
+  \includegraphics[width=0.5\textwidth]{figures/synthetic-5iterations-time.eps}}
+\caption{Running time comparison between Hadoop and Spark under real graphs and synthetic graphs. For each dataset, we make both implementations of PageRank iterate 5 times and record total time spent.}
+\label{fig:hadoopsparkrunningtime}
+\end{figure*}
+
+For each dataset, we make both implementations of PageRank iterate 5 times and record time spent. Figure \ref{fig:hadoopsparkrunningtime} shows running time comparison between Hadoop and Spark under real graphs and synthetic graphs.
+
+We mainly have 5 observations for this result. 
+
+1) When dataset is too small, e.g., wiki-Vote, soc-Slashdot0902, Spark can outperform Hadoop by 25x-40x. In this situation, the computing resources of all the slaves are underutilized. For Hadoop it is the job initialization time, disk access time and network communication time not the iterative computation time that dominates the total iteration time, whereas for Spark it is the iterative computation time that dominates the total iteration time. (For Hadoop one iteration takes two jobs, whereas for Spark, all iterations resides in one job.) So Spark has a great advantage over Hadoop.
+
+2) When dataset is small, e.g., web-Google, 19.txt, 20.txt, Spark can outperform Hadoop by 10x-15x. In this situation, the computing resources of all the slaves are moderately utilized. The iterative computation time begins to dominate the total iteration time of Hadoop and Hadoop starts to show its true performance.
+
+3) When dataset is large, e.g., cit-Patents, 22.txt, the advantage of Spark becomes small and Spark can only outperform Hadoop by 3x-5x. In this situation, for Hadoop the memory of each slave in the cluster is still moderately utilized while for Spark the memory of each slave in the cluster is full(i.e. reaching the memory limit of each slave in the cluster) which result in Spark's reduced performance advantage.
+
+4) When dataset is too large, e.g., 23.txt, Hadoop beats Spark. In this situation, for Hadoop the memory of each slave in the cluster is fully utilized while for Spark the memory of each slave in the cluster is not enough for PageRank running. There is no memory space for the newly created RDDs, so Spark starts its RDD replacement policy. Frequent RDD replacements cause Spark's performance to degrade to that of Hadoop. Even worse.  
+
+5) When dataset is extremely large, e.g., Twitter, PageRank on Spark crashes halfway with JVM heap exceptions while PageRank on Hadoop can still run.
+
+
+%From the next subsection, we can see that Spark is memory costly due to its memory based feature. 
+%All the four cases show that iteration times of both platforms have large variance and a great degree of fluctuation. This involves a lot of influence factors, such as machine hardware differences, network status differences, unexpected task failures and so on.
+%In case 1, where the dataset is wiki-Vote, Spark outperforms Hadoop by 47x. In case 2, where the dataset increases to soc-Slashdot0902, Spark's performance advantage reduces to 39x. By comparing the running time of Hadoop and Spark in Case 1 and 2, we find that when the dataset size doubles, the iteration time of Spark doubles too, but the iteration time of Hadoop does not. This is because in Case 1 the dataset is too small, for Hadoop it is the job initialization time and network communication time not the iterative computation time that dominates the iteration time, whereas for Spark it is the iterative computation time that dominates the iteration time. (For Hadoop one iteration takes one job, whereas for Spark, all 10 iterations resides in one job.) In Case 3, where the dataset increases to 015g, Spark's performance advantage reduces to 9.2x. This is not only because of the reason mentioned above, but also because of that reason that Spark has reached the memory litmit of the cluster and memory has become a bottleneck.
+
+% averaging total running time is meanningful, whereas averaging each iteration running time is meaningless
+% In order to eliminate the randomness of a single running of PageRank on Hadoop and Spark, we repeat 10 times running of PageRank on both platforms against three sizes of datasets and get averaged total running times. Figure \ref{fig:iter10avgtime} shows the averaged value comparison of Hadoop and Spark.
+
+\subsection{Memory Usage Comparison}
+In this subsection, we compare the memory usage between Hadoop and Spark. We also use five iterations for all the datasets. 
+
+When PageRank is running on either Hadoop or Spark, we query and record each slave's system memory usage every second. When it ends, we can plot the temporal change of memory usage for each slave according to the records we have kept. By comparing the plots we find that the memory usage plots of all the seven slaves are roughly the same under the same size of dataset. This is because of the uniform distribution of the input data on the seven slaves and also illustrates the load balancing strategy adopted by both platforms. So we will only target at one slave(say, slave1) in the analysis below. Figure \ref{fig:time_memory_real} and Figure \ref{fig:time_memory_syn} show the memory usage.
+
+%we find that for a specific dataset the memory usage plots of PageRank implementations on Hadoop and Spark on each slave are roughly the same.
+ 
+\begin{figure*}[!t]
+  \centering
+  \subfloat[Hadoop]{    
+    \includegraphics[width=0.5\textwidth]{figures/hadoop-real-nodes-time-memory.eps}}
+  \subfloat[Spark]{ 
+    \includegraphics[width=0.5\textwidth]{figures/spark-real-nodes-time-memory.eps}}
+  \caption{PageRank run on Hadoop and Spark using real graphs for five iterations. Left plot is for Hadoop and right plot for Spark. x1: bottom axis, y1: left axis, x2: top axis, y2: right axis. In each plot, running time(y1) vs number of nodes(x1) for the four real graphs are shown by four points in different colors; memory usage(y2) vs time sequence(x2) for the four real graphs are shown by four curves in different colors whose colors are the same as the four points in corresponding colors.}
+  \label{fig:time_memory_real} 
+\end{figure*}
+
+\begin{figure*}[!t]
+  \centering
+  \subfloat[Hadoop]{    
+    \includegraphics[width=0.5\textwidth]{figures/hadoop-synthetic-nodes-time-memory.eps}}
+  \subfloat[Spark]{ 
+    \includegraphics[width=0.5\textwidth]{figures/spark-synthetic-nodes-time-memory.eps}}
+  \caption{PageRank run on Hadoop and Spark using Kronecker graphs for five iterations. Left plot is for Hadoop and right plot for Spark. x1: bottom axis, y1: left axis, x2: top axis, y2: right axis. In each plot, running time(y1) vs number of nodes(x1) for the five Kronecker graphs are shown by five points in different colors; memory usage(y2) vs time sequence(x2) for the five Kronecker graphs are shown by five curves in different colors whose colors are the same as the five points in corresponding colors.}
+  \label{fig:time_memory_syn} 
+\end{figure*}
+
+
+
+Now we analyze and explain the results shown above. 
+ 
+
+For Hadoop platform, when dataset is fixed, memory usage exhibits periodically increase and decrease with the increase in the number of iterations. There is also a gradual increment between two consecutive iterations. The periodicity is due to the iterative nature of PageRank algorithm. Each cycle corresponds to one iteration of PageRank. In each cycle, there are three peaks, which corresponds to the Mapper and Reducer stages in phase 1 and the Mapper stage in phase 2 respectively. All these three stages consume memory and lead to a peak of memory usage. The Mapper stage in phase 1 comsumes a little bit more memory than its corresponding Reducer stage in phase 1 and Mapper stage in phase 2. Reducer stage in phase 1 lasts longer than the other two stages. 
+%The gradual increase in memory usage between two consecutive iterations is probably due to the memory cache policy used by the operating system on which the Hadoop platform runs.
+
+For Hadoop platform, when iteration number is fixed, the shapes of memory usage plots are similar with the increase in the size of dataset. Differences exist in two aspects. When dataset size is larger, the gradual increment between two consecutive iterations is bigger and the three peaks in each iteration are higher. When the increment reaches memory limit of a slave, the increment stops and the height of the three peaks does not change.
+
+For Spark platform, when dataset size is fixed, memory usage only exhibits periodically gradual increase with the increase in the number of iterations. The reason for periodicity is the same as that for Hadoop. However, there are no peaks in each cycle. The gradual increment between two consecutive iterations is because of the creation of new auxiliary RDDs. Spark uses RDD for data cache and RDD is a read-only data structure. There are two main RDDs in Spark's PageRank implementation. One is used for caching the graph structure, which will not change during iterative process. We call this RDD the main RDD. The other one is used for caching temporary PageRank value for each node in the graph, which will change in each iteration. We call this RDD the auxiliary RDD. Because of the read-only nature of RDD, a new auxiliary RDD will be created when changes happen to it in each iteration.
+
+For Spark platform, when iteration number is fixed, the shapes of memory usage plots are similar with the increase in the size of dataset. When dataset size is larger, the gradual increment between two consecutive iterations is bigger. When the increment reaches memory limit of a slave, the increase stops. When the dataset size is too large, the program cannot run without enough memory.
+
+In Hadoop platform, iterative operations are implemented through multiple MapReduce computations. Each iteration corresponds to one or more MapReduce computations. When a Map or Reduce computation ends, the memory used by it will be released. Whereas, in Spark platform, iterative operations are implemented in a single Spark program. So there is no memory release phenomenon in Spark implementation. 
+
+From the experimental memory plots, we can also find that Spark is extremely memory consuming. For a graph dataset whose size is 300M-500M, the total 21GB memory of the cluster will be occupied. 
+
+
+% \begin{table*}[!t]
+% \renewcommand{\arraystretch}{1.2}
+% \centering
+% \begin{tabular}{|c|c|c|c|}
+% \hline
+% \bfseries Name & \bfseries Hadoop & \bfseries Spark & \bfseries Ratio\\
+% \hline
+% wiki-Vote & 337s & 9s & 37.4 \\
+% \hline
+% soc-Slashdot0902 & 330s & 13s & 25.4\\
+% \hline
+% web-Stanford & 349s & 23s & 15.2 \\
+% \hline
+% web-Google & 407s & 51s & 7.98\\
+% \hline
+% web-BerkStan & 458s & 47s & 9.7 \\
+% \hline
+% cit-Patents & 796s & 197s & 4.04\\
+% \hline
+% \end{tabular}
+% \caption{Hadoop and Spark scalability experiment with 7 slaves using real graphs}
+% \label{tab:hadoop_spark_scala_7slaves_realgraph}
+% \end{table*}
+
+
+% \begin{table*}[!t]
+% \renewcommand{\arraystretch}{1.2}
+% \centering
+% \begin{tabular}{|c|c|c|c|}
+% \hline
+% \bfseries Name & \bfseries Hadoop & \bfseries Spark & \bfseries Ratio\\
+% \hline
+% 19.txt & 379s & 30s & 12.6\\
+% \hline
+% 20.txt & 457s & 55s & 8.3\\
+% \hline
+% 21.txt & 637s & 117s & 5.4\\
+% \hline
+% 22.txt & 1040s & 311s & 3.3\\
+% \hline
+% 23.txt & 1481s & 1888s & 0.78\\
+% \hline
+% \end{tabular}
+% \caption{Hadoop and Spark scalability experiment with 7 slaves using synthetic graphs generated by Kronecker generator.}
+% \label{tab:hadoop_spark_scala_7slaves_syngraph}
+% \end{table*}
+
+% \begin{figure*}[!t]
+%   \centering
+%     \subfloat[Real Graphs]{
+%         \includegraphics[width=0.5\textwidth]{time/hadoop-spark/7-slaves/real/hadoop-low-high.eps}}
+%     \subfloat[Synthetic Graphs]{
+%         \includegraphics[width=0.5\textwidth]{time/hadoop-spark/7-slaves/synthetic/hadoop-low-high.eps}}
+%   \caption{Running time comparison among Hadoop-0.20.205.0, Hadoop-1.1.2 and Spark on real graphs and synthetic graphs. For each dataset, we make both implementations of PageRank iterate 5 times and record total time spent.}
+%   \end{figure*}
+
+% An example of a floating figure using the graphicx package.
+% Note that \label must occur AFTER (or within) \caption.
+% For figures, \caption should occur after the \includegraphics.
+% Note that IEEEtran v1.7 and later has special internal code that
+% is designed to preserve the operation of \label within \caption
+% even when the captionsoff option is in effect. However, because
+% of issues like this, it may be the safest practice to put all your
+% \label just after \caption rather than within \caption{}.
+%
+% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
+% option should be used if it is desired that the figures are to be
+% displayed while in draft mode.
+%
+%\begin{figure}[!t]
+%\centering
+%\includegraphics[width=2.5in]{myfigure}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+%\caption{Simulation Results}
+%\label{fig_sim}
+%\end{figure}
+
+% Note that IEEE typically puts floats only at the top, even when this
+% results in a large percentage of a column being occupied by floats.
+
+
+% An example of a double column floating figure using two subfigures.
+% (The subfig.sty package must be loaded for this to work.)
+% The subfigure \label commands are set within each subfloat command, the
+% \label for the overall figure must come after \caption.
+% \hfil must be used as a separator to get equal spacing.
+% The subfigure.sty package works much the same way, except \subfigure is
+% used instead of \subfloat.
+%
+%\begin{figure*}[!t]
+%\centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
+%\label{fig_first_case}}
+%\hfil
+%\subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
+%\label{fig_second_case}}}
+%\caption{Simulation results}
+%\label{fig_sim}
+%\end{figure*}
+%
+% Note that often IEEE papers with subfigures do not employ subfigure
+% captions (using the optional argument to \subfloat), but instead will
+% reference/describe all of them (a), (b), etc., within the main caption.
+
+
+% An example of a floating table. Note that, for IEEE style tables, the 
+% \caption command should come BEFORE the table. Table text will default to
+% \footnotesize as IEEE normally uses this smaller font for tables.
+% The \label must come after \caption as always.
+%
+%\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+%\caption{An Example of a Table}
+%\label{table_example}
+%\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+%\begin{tabular}{|c||c|}
+%\hline
+%One & Two\\
+%\hline
+%Three & Four\\
+%\hline
+%\end{tabular}
+%\end{table}
+
+
+
+
+% Note that IEEE does not put floats in the very first column - or typically
+% anywhere on the first page for that matter. Also, in-text middle ("here")
+% positioning is not used. Most IEEE journals/conferences use top floats
+% exclusively. Note that, LaTeX2e, unlike IEEE journals/conferences, places
+% footnotes above bottom floats. This can be corrected via the \fnbelowfloat
+% command of the stfloats package.
+
+
+
+\section{Conclusion}
+In this section, we give conclusion of our experiment.
+
+Through experiment we find that although Spark is really faster than Hadoop, it is at the cost of significant memory consumption. If speed is not necessary and you don't have abundant memory, you'd better not choose Spark, because Spark may be degraded to Hadoop and you may even run into the danger of program crashes. You can choose Hadoop as long as you have enough disk space to accommodate the original dataset and intermediate results.
+
+For a specific iterative operation, if you require less running time, Spark is certainly your choice. But you need to provide enough memory for your operation in order to secure Spark's performance advantage. The problem is that it is hard to determine the accurate amount of memory for iterative operatoins running on Spark. Exactly how much memory is enough depends on the particular iterative algorithm and the size of the dataset it processes. Intermediate results during iterations are stored in memory as RDDs. Because of the read-only nature of RDD, new RDDs will always be created in each iteration. If the size of intermediate results is at constant level, the increase of memory usage between two consecutive iterations is not significant. If the size of the intermediate results is proportional to the size of the input dataset(like PageRank), the increase of memory usage between two consecutive iterations is significant.
+
+
+% conference papers do not normally have an appendix
+
+
+% use section* for acknowledgement
+\section*{Acknowledgment}
+
+The authors would like to thank...
+
+
+
+
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{1}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+\bibliography{IEEEabrv,references}
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
+% that's all folks
+\end{document}

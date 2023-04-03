@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+     android:background="#000000"
+    tools:context=".ScreenPlusWifiPage" >
+
+      <LinearLayout
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+     	android:layout_marginTop="10dp"
+     	android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearlayout_1_equvalent"
+         >
+    <TextView
+        android:id="@+id/textV_1_screenonly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+     	android:textColor="#BBBBBB"
+        android:textSize="14sp"
+        android:minWidth="100dp"
+        android:padding="2dp"
+        android:text="Screen Brightness(0-100) : "
+         />
+    <EditText 
+        android:id="@+id/editV_1_screenonly"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:minWidth="50dp"
+        android:lines="1"
+        android:textSize="16sp"
+        android:textColor="#003300"
+        android:background="#555555"
+        android:padding="8dp"
+        android:layout_centerHorizontal="true"
+        android:text="1"
+        />
+    </LinearLayout> 
+    <LinearLayout
+        android:layout_width="match_parent"
+     	android:layout_height="wrap_content"
+     	android:orientation="horizontal"
+     	android:gravity = "center"
+     	android:id="@+id/linearlayout_2_screenonly"
+     	android:layout_below="@id/linearlayout_1_equvalent"
+     	android:layout_marginTop="10dp"
+         >
+    <TextView
+        android:id="@+id/textV_2_screenonly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#BBBBBB"
+        android:textSize="14sp"
+        android:minWidth="100dp"
+        android:padding="2dp"
+        android:text="Write Log? (0 no, 1 yes) : "
+         />
+    <EditText 
+        android:id="@+id/editV_2_screenonly"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:minWidth="50dp"
+        android:lines="1"
+        android:textSize="16sp"
+        android:textColor="#003300"
+        android:background="#555555"
+        android:padding="8dp"
+        android:layout_centerHorizontal="true"
+        android:text="0"
+        />
+    </LinearLayout> 
+    
+    <Button 
+        android:id="@+id/button_screenonly"
+        android:layout_centerHorizontal="true"
+        android:layout_height = "wrap_content"
+        android:layout_width = "wrap_content"
+        android:layout_alignParentBottom = "true"
+        android:text="START"
+        />
+
+</RelativeLayout>

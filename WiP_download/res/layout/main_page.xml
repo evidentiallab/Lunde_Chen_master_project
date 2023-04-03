@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/layout_linear" >
+    
+    <TextView 
+     android:id="@+id/textV"
+     android:text="http://www2.census.gov/census_2010/04-Summary_File_1/Alaska/ak2010.sf1.zip"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:lines="5"
+        />
+    
+    <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+    
+    <LinearLayout
+	android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#000000"
+    android:gravity="center"
+    android:orientation="horizontal"
+         >
+    <Button
+     android:id="@+id/bttn_pre"
+     android:text="Previous"
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+        />
+    
+    <FrameLayout
+      android:layout_width="4dp"
+      android:layout_height="0dp"
+      />
+    
+     <Button
+     android:id="@+id/bttn_next"
+     android:text="Next"
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content"
+     android:textColor="#BBBBBB"
+     android:layout_weight="1"
+        />   
+    </LinearLayout>
+    
+    <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+    
+     <Button
+     android:id="@+id/bttn_start"
+     android:text="START"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+     <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+      />
+     
+     <Button
+     android:id="@+id/bttn_stop"
+     android:text="STOP"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+
+</LinearLayout>

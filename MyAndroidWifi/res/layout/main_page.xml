@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:gravity="center"
+    android:orientation="vertical" >
+    
+    <Button
+     android:id="@+id/bttn_check_server_mainpage"
+     android:text="Check Server"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+    
+     <Button
+     android:layout_marginTop="10dp"
+     android:id="@+id/bttn_checkbatterywifi_mainpage"
+     android:text="Check Battery / Wifi"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+    
+     <Button
+    android:layout_marginTop="10dp"
+     android:id="@+id/bttn_screen_plus_wifi_mainpage"
+     android:text="Screen + Wifi Mode"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     <Button
+     android:layout_marginTop="10dp"
+     android:id="@+id/bttn_screen_only_mainpage"
+     android:text="Screen Only Mode"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+     <Button
+     android:layout_marginTop="10dp"
+     android:id="@+id/bttn_scan_mode_mainpage"
+     android:text="Scan Mode"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+     android:visibility="gone"
+        />
+     
+     <Button
+     android:layout_marginTop="10dp"
+     android:id="@+id/bttn_rssi_mainpage"
+     android:text="Rssi Modelling"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+     <Button
+     android:layout_marginTop="10dp"
+     android:id="@+id/bttn_connectivity_mainpage"
+     android:text="Connectiviy Settings"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+     <Button
+     android:layout_marginTop="10dp"
+     android:id="@+id/bttn_tcpdump_mainpage"
+     android:text="TCPDUMP"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+     <Button
+     android:layout_marginTop="10dp"
+     android:id="@+id/bttn_debugpage_mainpage"
+     android:text="Debug Mode"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+
+</LinearLayout>

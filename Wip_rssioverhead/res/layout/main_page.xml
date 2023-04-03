@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/layout_linear" >
+    
+    <ToggleButton
+        android:id="@+id/toggle_bttn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textOn="Registerd ~"
+        android:textColor="#66CC33"
+        android:textOff="Let's register!"
+      />
+    
+     <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+    	/>
+    
+     <Button
+     android:id="@+id/bttn_start"
+     android:text="START OVERHEAD"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+     <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+    	/>
+     
+     <Button
+     android:id="@+id/bttn_whichrate"
+     android:text="WHICH RATE SAMPLING?"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+      <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+    	/>
+     
+     <Button
+     android:id="@+id/bttn_start_series"
+     android:text="START TIME SERIES LOG"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+     <FrameLayout
+      android:layout_width="0px"
+      android:layout_height="4dp"
+    	/>
+          
+     <Button
+     android:id="@+id/bttn_stop"
+     android:text="STOP"
+     android:padding="10dp"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:textColor="#BBBBBB"
+        />
+     
+
+      
+
+
+</LinearLayout>
